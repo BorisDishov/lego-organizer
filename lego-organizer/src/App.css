@@ -89,7 +89,21 @@ li a:hover {
   resize: none;
   font-weight: bold;
   margin: 10px;
-  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.topic {
+  text-align: center;
+  display: block;
+  padding-top: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  height: 30px;
+  width: 30%;
+  resize: none;
+  font-weight: bold;
+  margin: 10px;
   margin-bottom: 20px;
 }
 

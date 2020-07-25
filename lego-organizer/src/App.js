@@ -202,6 +202,7 @@ class Login extends React.Component {
   render() {
     return (
       <form className="form__group" onSubmit={this.handleSubmit}>
+        <h2 className="topic">Login</h2>
         <textarea className="form__field" name="part" id='add-part' required placeholder={this.state.usernamePlaceholder} onChange={this.handleNameChange} />
         <input className="form__field" type="password" name="password" id='count' required placeholder={this.state.passwordPlaceholder} onChange={this.handlePassChange} />
         <input className="button_submit" type="submit" value="Login" />
@@ -292,6 +293,7 @@ class Register extends React.Component {
   render() {
     return (
       <form className="form__group" onSubmit={this.handleSubmit}>
+        <h2 className="topic">Register</h2>
         <textarea className="form__field" name="part" id='username' required placeholder={this.state.usernamePlaceholder} onChange={this.handleNameChange} />
         <input className="form__field" name="part" type="password" id='password' required placeholder={this.state.passwordPlaceholder} onChange={this.handlePassChange} />
         <input className="form__field" name="part" type="password" id='confPassword' required placeholder={this.state.confPasswordPlaceholder} onChange={this.handleConfPassChange} />
@@ -382,8 +384,11 @@ class AddPart extends React.Component {
               return response.json();
             }
             if (response.status === 404) {
-              alert("Part with ID '" + this.state.partId + "' not found!");
-              throw response.json();
+              if(part.count < 0){
+                alert("Part with ID '" + this.state.partId + "' not found!");
+                throw response.json();
+              }
+              return response.json();
             }
             else {
               throw response.json();
@@ -407,6 +412,7 @@ class AddPart extends React.Component {
   render() {
     return (
       <form className="form__group" onSubmit={this.handleSubmit}>
+        <h2 className="topic">Add/Remove Parts</h2>
         <textarea className="form__field" name="part" id='add-part' required placeholder={this.state.value} onChange={this.handleIdChange} />
         <textarea className="form__field" name="part" id='count' required placeholder={this.state.countPlaceholder} onChange={this.handleCountChange} />
         <input className="button_submit" type="submit" value="Add" onClick={this.add} />
@@ -530,6 +536,7 @@ class AddSet extends React.Component {
   render() {
     return (
       <form className="form__group" onSubmit={this.handleSubmit}>
+        <h2 className="topic">Add/Remove Set</h2>
         <textarea className="form__field" name="part" id='add-part' required placeholder={this.state.value} onChange={this.handleChange} />
         <input className="button_submit" type="submit" value="Add" onClick={this.add} />
         <input className="button_submit" type="submit" value="Remove" onClick={this.remove} />
@@ -627,19 +634,22 @@ class Suggest extends React.Component {
 
   render() {
     return (
-      <div className="parts-list">
-        {this.state.suggestions.map(set =>
-          <div className="single-part" key={set.id}>
-            <img className="part-img" src={set.img} onClick={this.handleClick} height="100" width="110"></img>
-            <div className="part-info">
-              <span className="span-part"> setId: </span>
-              <span className="span-part">{set.setId}</span>
-              <span className="span-part"> parts count: </span>
-              <span className="span-part">{set.partsList.length} </span>
+      <div>
+        <h2 className="topic">Suggestions</h2>
+        <div className="parts-list">
+          {this.state.suggestions.map(set =>
+            <div className="single-part" key={set.id}>
+              <img className="part-img" src={set.img} onClick={this.handleClick} height="100" width="110"></img>
+              <div className="part-info">
+                <span className="span-part"> setId: </span>
+                <span className="span-part">{set.setId}</span>
+                <span className="span-part"> parts count: </span>
+                <span className="span-part">{set.partsList.length} </span>
+              </div>
+              <button className="btn-parts-list" id={set.setId} onClick={this.showPartsList}>Show Parts</button>
             </div>
-            <button className="btn-parts-list" id={set.setId} onClick={this.showPartsList}>Show Parts</button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
@@ -743,20 +753,23 @@ class ListSets extends React.Component {
 
   render() {
     return (
-      <div className="parts-list">
-        {this.state.sets.map(set =>
-          <div className="single-part" key={set.id}>
-            <img className="part-img" src={set.img} onClick={this.handleClick} height="100" width="110"></img>
-            <div className="part-info">
-              <span className="span-part"> setId: </span>
-              <span className="span-part">{set.setId}</span>
-              <span className="span-part"> parts count: </span>
-              <span className="span-part">{set.partsList.length} </span>
+      <div>
+        <h2 className="topic">Sets List</h2>
+        <div className="parts-list">
+          {this.state.sets.map(set =>
+            <div className="single-part" key={set.id}>
+              <img className="part-img" src={set.img} onClick={this.handleClick} height="100" width="110"></img>
+              <div className="part-info">
+                <span className="span-part"> setId: </span>
+                <span className="span-part">{set.setId}</span>
+                <span className="span-part"> parts count: </span>
+                <span className="span-part">{set.partsList.length} </span>
+              </div>
+              <button className="btn-parts-list" id={set.setId} onClick={this.showPartsList}>Show Parts</button>
+              <button className="btn-parts-list" id={set.setId} onClick={this.showMissingParts}>Missing Parts</button>
             </div>
-            <button className="btn-parts-list" id={set.setId} onClick={this.showPartsList}>Show Parts</button>
-            <button className="btn-parts-list" id={set.setId} onClick={this.showMissingParts}>Missing Parts</button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
@@ -824,22 +837,6 @@ class SetPartList extends React.Component {
           let parts1 = this.state.parts;
           parts1.push(part);
           this.setState({ parts: parts1 });
-          /*fetch("http://localhost:8080/api/parts/" + this.state.set.partsList[i])
-            .then(response => {
-              if (response.ok) {
-                return response.json();
-              }
-              else {
-                throw response.json();
-              }
-            })
-            .then(data => {
-              let parts1 = this.state.parts;
-              data.count = this.state.set.partsCount[i];
-              parts1.push(data);
-              this.setState({ parts: parts1 });
-            })
-            .catch(err => console.log(err));*/
         }
       })
       .catch(err => console.log(err));
@@ -852,18 +849,21 @@ class SetPartList extends React.Component {
 
   render() {
     return (
-      <div className="parts-list">
-        {this.state.parts.map(part =>
-          <div className="single-part" key={part.id}>
-            <img className="part-img" src={part.img} height="100" width="110"></img>
-            <div className="part-info">
-              <span className="span-part"> partId: </span>
-              <span className="span-part">{part.partId}</span>
-              <span className="span-part"> count: </span>
-              <span className="span-part">{part.count} </span>
+      <div>
+        <h2 className="topic">Parts List</h2>
+        <div className="parts-list">
+          {this.state.parts.map(part =>
+            <div className="single-part" key={part.id}>
+              <img className="part-img" src={part.img} height="100" width="110"></img>
+              <div className="part-info">
+                <span className="span-part"> partId: </span>
+                <span className="span-part">{part.partId}</span>
+                <span className="span-part"> count: </span>
+                <span className="span-part">{part.count} </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
@@ -961,18 +961,21 @@ class MissingSetPartList extends React.Component {
 
   render() {
     return (
-      <div className="parts-list">
-        {this.state.missingParts.map(part =>
-          <div className="single-part" key={part.id}>
-            <img className="part-img" src={part.img} height="100" width="110"></img>
-            <div className="part-info">
-              <span className="span-part"> partId: </span>
-              <span className="span-part">{part.partId}</span>
-              <span className="span-part"> count: </span>
-              <span className="span-part">{part.count} </span>
+      <div>
+        <h2 className="topic">Missing Parts</h2>
+        <div className="parts-list">
+          {this.state.missingParts.map(part =>
+            <div className="single-part" key={part.id}>
+              <img className="part-img" src={part.img} height="100" width="110"></img>
+              <div className="part-info">
+                <span className="span-part"> partId: </span>
+                <span className="span-part">{part.partId}</span>
+                <span className="span-part"> count: </span>
+                <span className="span-part">{part.count} </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
@@ -1013,18 +1016,21 @@ class ListParts extends React.Component {
 
   render() {
     return (
-      <div className="parts-list">
-        {this.state.parts.map(part =>
-          <div className="single-part" key={part.id}>
-            <img className="part-img" src={part.img} height="100" width="110"></img>
-            <div className="part-info">
-              <span className="span-part"> partId: </span>
-              <span className="span-part">{part.partId}</span>
-              <span className="span-part"> count: </span>
-              <span className="span-part">{part.count} </span>
+      <div>
+        <h2 className="topic">Parts List</h2>
+        <div className="parts-list">
+          {this.state.parts.map(part =>
+            <div className="single-part" key={part.id}>
+              <img className="part-img" src={part.img} height="100" width="110"></img>
+              <div className="part-info">
+                <span className="span-part"> partId: </span>
+                <span className="span-part">{part.partId}</span>
+                <span className="span-part"> count: </span>
+                <span className="span-part">{part.count} </span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     );
   }
