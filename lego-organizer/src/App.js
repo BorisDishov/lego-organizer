@@ -90,7 +90,7 @@ export default function App() {
             <RoutedRegister />
           </Route>
           <PrivateRoute path="/">
-            <Home />
+            <RoutedHome />
           </PrivateRoute>
         </Switch>
       </div>
@@ -419,14 +419,25 @@ class AddPart extends React.Component {
 class Home extends React.Component {
   constructor(props) {
     super(props);
+    this.logout = this.logout.bind(this);
+  }
+
+  logout(event) {
+    const { history } = this.props;
+    authentication.signout(() => history.push("/"));
   }
 
   render() {
     return (
-      <h2 className="parts-list">Hello {authentication.user.username}!</h2>
+      <div className="form__group">
+        <h2 className="hello">Hello {authentication.user.username}!</h2>
+        <button className="button_submit" onClick={this.logout}>Logout</button>
+      </div>
     );
   }
 }
+
+const RoutedHome = withRouter(Home);
 
 class AddSet extends React.Component {
   constructor(props) {
